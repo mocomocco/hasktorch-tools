@@ -26,8 +26,8 @@ main = do
   initModel <- sample $ LinearHypParams 1 1
   ((trainedModel,_),losses) <- mapAccumM [1..iter] (initModel,GD) $ \epoc (model,opt) -> do
     let batchLoss = foldLoop trainingData zeroTensor $ \(input,output) loss ->
-                      let y' = linearLayer model $ toCPU $ asTensor input
-                          y = toCPU $ asTensor output
+                      let y' = linearLayer model $ {-toCPU $-} asTensor input
+                          y = {-toGPU $-} asTensor output
                       in add loss $ mseLoss y' y
         lossValue = (asValue batchLoss)::Float
     showLoss 5 epoc lossValue
